@@ -2,9 +2,12 @@ const  {
     GraphQLObjectType,
     GraphQLNonNull,
     GraphQLString,
-    GraphQLID
+    GraphQLID,
+    GraphQLList
 } = require('graphql');
 
+const ContestType = require('./contest-type');
+const pgdb = require('../../database/pgdb');
 module.exports = new GraphQLObjectType({
     name: 'MeType',
     description : "Basic user type with required fields",
@@ -21,7 +24,13 @@ module.exports = new GraphQLObjectType({
         fullName :{
             type: GraphQLString,
             resolve: obj=>`${obj.firstName} ${obj.lastName}`
+        },
+        contests: {
+            type: new GraphQLList(ContestType),
+            resolve: (obj, args, ctx)=>{
+                // read rows from DB
+                return pgdb(ctx.pgPool).getContests(obj);
+            }
         }
-        
     }
 })
