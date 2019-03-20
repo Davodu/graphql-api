@@ -20,6 +20,7 @@ MongoClient.connect(mongoConfig.url, (err, db) => {
       votesCount: 4
     }
   ]).then(response => {
+    // eslint-disable-next-line no-console
     console.log(response);
     db.close();
   });
